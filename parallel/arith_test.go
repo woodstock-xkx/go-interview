@@ -9,14 +9,15 @@ import (
 
 func testParallelNumCounting(t *testing.T, N int) {
 	dataLen := N
+	dataRange := dataLen / 10
 	data := make([]int, dataLen)
 	for i, _ := range data {
-		data[i] = int(rand.Int31n(int32(dataLen / 10)))
+		data[i] = int(rand.Int31n(int32(dataRange)))
 	}
 
-	serialNC := SerialNumCounting(data)
+	serialNC := SerialNumCounting(data, dataRange)
 	for numProcessors := 1; numProcessors <= runtime.NumCPU(); numProcessors++ {
-		parallelNC := ParallelNumCounting(data, numProcessors)
+		parallelNC := ParallelNumCounting(data, numProcessors, dataRange)
 		assert.Equal(t, serialNC, parallelNC, "should equal")
 	}
 }
